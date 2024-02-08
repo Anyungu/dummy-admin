@@ -31,3 +31,13 @@ export const get = async (url: string, queryParams?: QueryParams) => {
         return Promise.reject(error);
     }
 };
+
+export const patch = async (url: string, body?: any, queryParams?: QueryParams) => {
+    try {
+        const response = await axiosInstance.patch(url, body, { params: queryParams });
+        return response.data;
+    } catch (error) {
+        console.error(`Fetch error for PUT ${url}: ${error}`);
+        return Promise.reject(error);
+    }
+};

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { CaretSortIcon, DragHandleDots2Icon, TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
+import { CaretSortIcon, Cross2Icon, DragHandleDots2Icon, TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,8 +13,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useHomePageStore } from "@/store/homepage.store"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 type Props = {
     position: number
@@ -22,7 +22,7 @@ type Props = {
 
 export function NestedCatgoryCollapsibe({ position }: Props) {
     const [isOpen, setIsOpen] = useState(false)
-    const { categoryTabs } = useHomePageStore()
+    const { categoryTabs, updateCategoryTabs } = useHomePageStore()
     const currentCategory = categoryTabs?.[position]
 
     return (
@@ -31,7 +31,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
             onOpenChange={setIsOpen}
             className="flex flex-col ml-6 space-y-2 bg-gray-200 py-2 px-2"
         >
-            <div className="flex items-center cursor-pointer">
+            <div className="flex items-center cursor-pointer justify-between w-full pr-4">
                 <CollapsibleTrigger asChild>
                     <div className="flex items-center">
                         <DragHandleDots2Icon />
@@ -41,6 +41,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
                         </div>
                     </div>
                 </CollapsibleTrigger>
+                <Cross2Icon color="red" />
             </div>
 
             <CollapsibleContent className="space-y-6">
@@ -53,7 +54,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
                         >
                             Active
                         </label>
-                        <Checkbox id="terms" checked={currentCategory?.active} />
+                        <Checkbox id="terms" checked={currentCategory?.active} onCheckedChange={(val) => updateCategoryTabs(position, { active: val })} />
 
                     </div>
                     <div className="flex items-center">
@@ -63,7 +64,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
                         >
                             Title
                         </label>
-                        <Input id="title" type="text" placeholder="Title" value={currentCategory?.title} />
+                        <Input id="title" type="text" placeholder="Title" value={currentCategory?.title} onChange={(e) => updateCategoryTabs(position, { title: e.target.value })} />
                     </div>
 
                     <div className="flex items-center">
@@ -73,25 +74,18 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
                         >
                             Link
                         </label>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Input className="bg-white w-full cursor-pointer" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-full">
-                                <DropdownMenuItem className="w-full">GitHub</DropdownMenuItem>
-                                <DropdownMenuItem className="w-full">Support</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                        <Select value={`${currentCategory?.categoryId}`} onValueChange={(value) => updateCategoryTabs(position, { categoryId: parseInt(value) })}>
 
-                    <div className="flex items-center">
-                        <label
-                            htmlFor="limit"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-24"
-                        >
-                            Limit
-                        </label>
-                        <Input id="limit" type="number" placeholder="20" />
+                            <SelectTrigger>
+                                <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select a category" />
+                            </SelectTrigger>
+
+                            <SelectContent>
+                                <SelectItem value="m@example.com">m@example.com</SelectItem>
+                                <SelectItem value="m@google.com">m@google.com</SelectItem>
+                                <SelectItem value="m@support.com">m@support.com</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                 </div>

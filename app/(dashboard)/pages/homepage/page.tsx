@@ -1,11 +1,11 @@
 import React from 'react'
-import { EventCollapsible } from './components/EventCollapsible'
 import { get } from '@/lib/axios.util'
 import { useHomePageStore } from '@/store/homepage.store'
 import Title from './Title'
 import ClientStoreInitializer from '@/components/ClientStoreInitializer'
 import { CategoryCollapsible } from './components/CategoryCollapisble'
 import ApplyChangesButton from './components/ApplyChangesButton'
+import EventCollapsible from './components/EventCollapsible'
 
 
 
@@ -21,15 +21,11 @@ async function page() {
       <ClientStoreInitializer {...data} />
       <Title title='Homepage' />
       <CategoryCollapsible />
-      {
-        data?.sectionEvents.map((event: any, idx: number) => {
-          return <EventCollapsible key={idx} position={idx} />
-        })
-      }
-      <div className='flex flex-col w-full items-end'>
-      <ApplyChangesButton />
+      <EventCollapsible />
+      <div className='flex w-full justify-end'>
+        <ApplyChangesButton />
       </div>
-      
+
 
     </div>
   )

@@ -22,7 +22,7 @@ function Sidenav() {
       <div className={isActive('/events') ? 'text-blue-500' : ''}>
         <Link href="/events">Events</Link>
       </div>
-      <div className={isActive('//tickets') ? 'text-blue-500' : ''}>
+      <div className={isActive('/tickets') ? 'text-blue-500' : ''}>
         <Link href="/tickets">Tickets</Link>
       </div>
     </div>
