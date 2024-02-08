@@ -1,6 +1,17 @@
 import { create } from 'zustand'
 type CheckedState = boolean | 'indeterminate' | undefined;
 
+enum HomePageEventOrderOptions {
+    CREATED_AT = 'createdAt',
+    START_DATE = 'startDate',
+}
+
+enum SectionEventLayout {
+    CAROUSEL = 'carousel',
+    HERO_BANNER = 'heroBanner',
+    SWIM_LINE = 'swimLine',
+}
+
 type CategoryTab = {
     active: CheckedState,
     title: string,
@@ -13,8 +24,9 @@ type SectionEvent = {
     title: string,
     image: string,
     categoryId: number,
-    orderBy: string,
-    limit: number
+    orderBy: HomePageEventOrderOptions,
+    limit: number,
+    layout: SectionEventLayout
 }
 
 type StripContent = {
@@ -28,6 +40,7 @@ type BannerContent = {
 }
 
 export type HomePageStore = {
+    updating: boolean,
     versionManagement: boolean,
     texts: {},
     banner: BannerContent,
@@ -42,10 +55,12 @@ export type HomePageStore = {
     updateStripContent: (index: number, eventUpdates: Partial<StripContent>) => void,
     addNewCategoryTab: () => void,
     updateCategoryTabs: (index: number, eventUpdates: Partial<CategoryTab>) => void,
-    updateBanner: (index: number, eventUpdates: Partial<BannerContent>) => void,
+    updateBanner: (eventUpdates: Partial<BannerContent>) => void,
+    setUpdating: (value: boolean) => void
 }
 
 export const useHomePageStore = create<HomePageStore>((set) => ({
+    updating: false,
     versionManagement: true,
     texts: {},
     banner: { show: true, categoryTabsShow: true },
@@ -91,7 +106,7 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
         return { ...state, categoryTabs: updatedCategory };
     }),
 
-    updateBanner: (index: number, bannerUpdates: Partial<BannerContent>) => set((state) => {
+    updateBanner: (bannerUpdates: Partial<BannerContent>) => set((state) => {
 
         return { ...state, banner: { ...state.banner, ...bannerUpdates } };
     }),
@@ -99,11 +114,12 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
     addNewSectionEvent: () => set((state) => {
         const extraSectionEvent: SectionEvent = {
             active: true,
-            orderBy: 'createdAt',
+            orderBy: HomePageEventOrderOptions.CREATED_AT,
             title: 'New',
             image: 'url/to/new/image',
             limit: 10,
-            categoryId: 10000
+            categoryId: 10000,
+            layout: SectionEventLayout.CAROUSEL
         }
 
         const newSectionEvents = [...state.sectionEvents, extraSectionEvent]
@@ -120,5 +136,9 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
 
         const newCategoryTabs = [...state.categoryTabs, extraCategoryTab]
         return { ...state, categoryTabs: newCategoryTabs };
+    }),
+
+    setUpdating: (updating: boolean) => set((state) => {
+        return { ...state, updating };
     }),
 }));

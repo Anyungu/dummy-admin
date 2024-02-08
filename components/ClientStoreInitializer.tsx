@@ -1,7 +1,20 @@
 'use client'
 
+import { useCategoryStore } from '@/store/categories.store'
 import { useHomePageStore } from '@/store/homepage.store'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
+
+enum HomePageEventOrderOptions {
+    CREATED_AT = 'createdAt',
+    START_DATE = 'startDate',
+}
+
+enum SectionEventLayout {
+    CAROUSEL = 'carousel',
+    HERO_BANNER = 'heroBanner',
+    SWIM_LINE = 'swimLine',
+}
+
 type CategoryTab = {
     active: boolean,
     title: string,
@@ -14,8 +27,9 @@ type SectionEvent = {
     title: string,
     image: string,
     categoryId: number,
-    orderBy: string,
-    limit: number
+    orderBy: HomePageEventOrderOptions,
+    limit: number,
+    layout: SectionEventLayout,
 }
 
 type StripContent = {
@@ -28,7 +42,7 @@ type BannerContent = {
     categoryTabsShow: boolean,
 }
 
-export type Props = {
+type HomePageProps = {
     versionManagement: boolean,
     texts?: {},
     banner?: BannerContent,
@@ -39,10 +53,25 @@ export type Props = {
         text: '',
     }
 }
-function ClientStoreInitializer(data: Props) {
+
+type CategoryProps = {
+    id: number,
+    name: string,
+    categoryIcon: string,
+}
+
+type Props = {
+    homePage: HomePageProps,
+    category: CategoryProps[]
+}
+function ClientStoreInitializer({ category, homePage }: Props) {
+    console.log(category)
+    console.log(homePage)
+
     useEffect(() => {
-        useHomePageStore.setState({ ...data });
-    }, [data]);
+        useHomePageStore.setState({ ...useHomePageStore.getState(), ...homePage });
+        useCategoryStore.setState({ categories: [...useCategoryStore.getState().categories, ...category] })
+    }, [category, homePage]);
 
     return null;
 }

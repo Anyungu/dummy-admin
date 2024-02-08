@@ -15,21 +15,65 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { useHomePageStore } from "@/store/homepage.store"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCategoryStore } from "@/store/categories.store"
 
 type Props = {
   position: number
 }
+enum HomePageEventOrderOptions {
+  CREATED_AT = 'createdAt',
+  START_DATE = 'startDate',
+}
+
+enum SectionEventLayout {
+  CAROUSEL = 'carousel',
+  HERO_BANNER = 'heroBanner',
+  SWIM_LINE = 'swimLine',
+}
+
+const eventOrderDropDown = [
+  {
+    key: 0,
+    text: 'Created Date',
+    value: 'createdAt'
+  },
+  {
+    key: 1,
+    text: 'Start Date',
+    value: 'startDate'
+  }
+]
+
+const layoutDropDown = [
+  {
+    key: 0,
+    text: 'Carousel',
+    value: 'carousel'
+  },
+  {
+    key: 1,
+    text: 'Hero Banner',
+    value: 'heroBanner'
+  },
+  {
+    key: 1,
+    text: 'Swim Line',
+    value: 'swimLine'
+  }
+
+]
 
 export function NestedEventCollapsible({ position }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const { sectionEvents, updateSectionEventField } = useHomePageStore()
+  const { categories } = useCategoryStore()
   const currentEvent = sectionEvents?.[position]
 
   return (
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col ml-6 space-y-2 bg-gray-200 py-2 px-2"
+      className="flex flex-col ml-6 space-y-2 bg-gray-200 py-4 pl-2 pr-4"
     >
       <div className="flex items-center cursor-pointer w-full justify-between">
         <CollapsibleTrigger asChild>
@@ -96,10 +140,12 @@ export function NestedEventCollapsible({ position }: Props) {
                 <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select a category" />
               </SelectTrigger>
 
+
               <SelectContent>
-                <SelectItem value="m@example.com">m@example.com</SelectItem>
-                <SelectItem value="m@google.com">m@google.com</SelectItem>
-                <SelectItem value="m@support.com">m@support.com</SelectItem>
+                {categories.map((category, idx) => {
+                  return <SelectItem key={idx} value={`${category?.id}`}>{category?.name}</SelectItem>
+                })}
+
               </SelectContent>
             </Select>
           </div>
@@ -110,19 +156,42 @@ export function NestedEventCollapsible({ position }: Props) {
             >
               Order By
             </label>
-            <Select value={currentEvent?.orderBy} onValueChange={(value) => updateSectionEventField(position, { orderBy: value })}>
+            <Select value={currentEvent?.orderBy} onValueChange={(value: HomePageEventOrderOptions) => updateSectionEventField(position, { orderBy: value })}>
+
+              <SelectTrigger>
+                <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select order method" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {eventOrderDropDown?.map((el, idx) => {
+                  return <SelectItem key={idx} value={el?.value}>{el?.text}</SelectItem>
+                })}
+
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center">
+            <label
+              htmlFor="layout"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-24"
+            >
+              Layout
+            </label>
+            <Select value={currentEvent?.layout} onValueChange={(value: SectionEventLayout) => updateSectionEventField(position, { layout: value })}>
 
               <SelectTrigger>
                 <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select " />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="m@example.com">m@example.com</SelectItem>
-                <SelectItem value="m@google.com">m@google.com</SelectItem>
-                <SelectItem value="m@support.com">m@support.com</SelectItem>
+                {layoutDropDown?.map((el, idx) => {
+                  return <SelectItem key={idx} value={el?.value}>{el?.text}</SelectItem>
+                })}
               </SelectContent>
             </Select>
           </div>
+
           <div className="flex items-center">
             <label
               htmlFor="limit"

@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { useHomePageStore } from "@/store/homepage.store"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCategoryStore } from "@/store/categories.store"
 
 type Props = {
     position: number
@@ -23,6 +24,7 @@ type Props = {
 export function NestedCatgoryCollapsibe({ position }: Props) {
     const [isOpen, setIsOpen] = useState(false)
     const { categoryTabs, updateCategoryTabs } = useHomePageStore()
+    const { categories } = useCategoryStore()
     const currentCategory = categoryTabs?.[position]
 
     return (
@@ -81,9 +83,10 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
                             </SelectTrigger>
 
                             <SelectContent>
-                                <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                <SelectItem value="m@support.com">m@support.com</SelectItem>
+                                {categories.map((category, idx) => {
+                                    return <SelectItem key={idx} value={`${category?.id}`}>{category?.name}</SelectItem>
+                                })}
+
                             </SelectContent>
                         </Select>
                     </div>
