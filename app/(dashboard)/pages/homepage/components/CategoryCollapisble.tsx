@@ -62,7 +62,7 @@ export function CategoryCollapsible() {
         </RadioGroup>
         {
           categoryTabs?.map((cat, idx) => {
-            return <NestedCatgoryCollapsibe position={idx} />
+            return <NestedCatgoryCollapsibe key={idx} position={idx} />
           })
         }
 

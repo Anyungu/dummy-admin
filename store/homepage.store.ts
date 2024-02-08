@@ -47,5 +47,15 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
     strip: [],
     footer: {
         text: '',
-    }
+    },
+    updateSectionEvent: (index: number, newEvent: SectionEvent) => set((state) => {
+        if (index < 0 || index >= state.sectionEvents.length) {
+            console.warn('Index out of bounds');
+            return state;
+        }
+        //must I really map?
+        const updatedSectionEvents = state.sectionEvents.map((item, i) => i === index ? newEvent : item);
+        
+        return { ...state, sectionEvents: updatedSectionEvents };
+    }),
 }));
