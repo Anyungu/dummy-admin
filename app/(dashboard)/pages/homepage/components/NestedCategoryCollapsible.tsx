@@ -23,7 +23,7 @@ type Props = {
 
 export function NestedCatgoryCollapsibe({ position }: Props) {
     const [isOpen, setIsOpen] = useState(false)
-    const { categoryTabs, updateCategoryTabs } = useHomePageStore()
+    const { categoryTabs, updateCategoryTabs, deleteCategoryTab } = useHomePageStore()
     const { categories } = useCategoryStore()
     const currentCategory = categoryTabs?.[position]
 
@@ -43,7 +43,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
                         </div>
                     </div>
                 </CollapsibleTrigger>
-                <Cross2Icon color="red" />
+                <Cross2Icon color="red" onClick={() => { deleteCategoryTab(position) }} />
             </div>
 
             <CollapsibleContent className="space-y-6">

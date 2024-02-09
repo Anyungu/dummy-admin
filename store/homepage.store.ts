@@ -57,6 +57,8 @@ export type HomePageStore = {
     updateCategoryTabs: (index: number, eventUpdates: Partial<CategoryTab>) => void,
     updateBanner: (eventUpdates: Partial<BannerContent>) => void,
     setUpdating: (value: boolean) => void
+    deleteSectionEvent: (index: number) => void,
+    deleteCategoryTab: (index: number) => void,
 }
 
 export const useHomePageStore = create<HomePageStore>((set) => ({
@@ -141,4 +143,22 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
     setUpdating: (updating: boolean) => set((state) => {
         return { ...state, updating };
     }),
+
+    deleteCategoryTab: (index: number) => set((state) => {
+        if (index < 0 || index >= state.categoryTabs.length) {
+            console.warn('Index out of bounds for deleting category tab');
+            return state;
+        }
+        const filteredCategoryTabs = state.categoryTabs.filter((_, i) => i !== index);
+        return { ...state, categoryTabs: filteredCategoryTabs };
+    }),
+
+    deleteSectionEvent: (index: number) => set((state) => {
+        if (index < 0 || index >= state.sectionEvents.length) {
+            console.warn('Index out of bounds for deleting section event');
+            return state;
+        }
+        const filteredSectionEvents = state.sectionEvents.filter((_, i) => i !== index);
+        return { ...state, sectionEvents: filteredSectionEvents };
+    })
 }));

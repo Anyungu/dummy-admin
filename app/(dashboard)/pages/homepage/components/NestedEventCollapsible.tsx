@@ -65,7 +65,7 @@ const layoutDropDown = [
 
 export function NestedEventCollapsible({ position }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const { sectionEvents, updateSectionEventField } = useHomePageStore()
+  const { sectionEvents, updateSectionEventField, deleteSectionEvent } = useHomePageStore()
   const { categories } = useCategoryStore()
   const currentEvent = sectionEvents?.[position]
 
@@ -86,7 +86,7 @@ export function NestedEventCollapsible({ position }: Props) {
           </div>
 
         </CollapsibleTrigger>
-        <Cross2Icon color="red" />
+        <Cross2Icon color="red" onClick={() => { deleteSectionEvent(position) }} />
       </div>
 
       <CollapsibleContent className="space-y-6">
