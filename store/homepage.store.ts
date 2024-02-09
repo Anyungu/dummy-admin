@@ -35,8 +35,8 @@ type StripContent = {
 }
 
 type BannerContent = {
-    show: boolean,
-    categoryTabsShow: boolean,
+    show: CheckedState,
+    categoryTabsShow: CheckedState,
 }
 
 export type HomePageStore = {
@@ -55,8 +55,8 @@ export type HomePageStore = {
     updateStripContent: (index: number, eventUpdates: Partial<StripContent>) => void,
     addNewCategoryTab: () => void,
     updateCategoryTabs: (index: number, eventUpdates: Partial<CategoryTab>) => void,
-    updateBanner: (eventUpdates: Partial<BannerContent>) => void,
-    setUpdating: (value: boolean) => void
+    updateBanner: (bannerUpdates: Partial<BannerContent>) => void,
+    setUpdating: (value: boolean) => void,
     deleteSectionEvent: (index: number) => void,
     deleteCategoryTab: (index: number) => void,
 }

@@ -7,6 +7,7 @@ import { CategoryCollapsible } from './components/CategoryCollapisble'
 import ApplyChangesButton from './components/ApplyChangesButton'
 import EventCollapsible from './components/EventCollapsible'
 import { useCategoryStore } from '@/store/categories.store'
+import BannerCollapsible from './components/BannerCollapsible'
 
 export const revalidate = 0
 
@@ -28,6 +29,7 @@ async function page() {
     <div className='my-6 mx-2 space-y-6'>
       <ClientStoreInitializer homePage={data[0]} category={data[1]} />
       <Title title='Homepage' />
+      <BannerCollapsible />
       <CategoryCollapsible />
       <EventCollapsible />
       <div className='flex w-full justify-end'>
