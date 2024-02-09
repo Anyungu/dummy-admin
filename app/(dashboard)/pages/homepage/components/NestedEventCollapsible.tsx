@@ -73,7 +73,7 @@ export function NestedEventCollapsible({ position }: Props) {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col ml-6 space-y-2 bg-gray-200 py-4 pl-2 pr-4"
+      className="flex flex-col ml-6 space-y-2 bg-gray-200 py-4 pl-2 pr-4 rounded-md"
     >
       <div className="flex items-center cursor-pointer w-full justify-between">
         <CollapsibleTrigger asChild>
@@ -106,7 +106,7 @@ export function NestedEventCollapsible({ position }: Props) {
           </div>
 
         </RadioGroup>
-        <div className="flex flex-col bg-gray-100 py-5 pl-5 pr-16 space-y-4">
+        <div className="flex flex-col bg-gray-100 py-5 pl-5 pr-16 space-y-4 rounded-md">
           <div className="flex items-center">
             <label
               htmlFor="terms"

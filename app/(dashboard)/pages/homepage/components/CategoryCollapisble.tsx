@@ -26,7 +26,7 @@ export function CategoryCollapsible() {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col ml-6 space-y-2 bg-gray-200 py-4 px-2 pr-4"
+      className="flex flex-col ml-6 space-y-2 bg-gray-200 py-4 px-2 pr-4 rounded-md"
     >
       <div className="flex items-center cursor-pointer">
 

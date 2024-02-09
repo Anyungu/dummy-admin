@@ -31,7 +31,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
         <Collapsible
             open={isOpen}
             onOpenChange={setIsOpen}
-            className="flex flex-col ml-6 space-y-2 bg-gray-200 py-2 px-2"
+            className="flex flex-col ml-6 space-y-2 bg-gray-200 py-2 px-2 rounded-sm"
         >
             <div className="flex items-center cursor-pointer justify-between w-full pr-4">
                 <CollapsibleTrigger asChild>
@@ -48,7 +48,7 @@ export function NestedCatgoryCollapsibe({ position }: Props) {
 
             <CollapsibleContent className="space-y-6">
 
-                <div className="flex flex-col bg-gray-100 py-5 pl-5 pr-16 space-y-4">
+                <div className="flex flex-col bg-gray-100 py-5 pl-5 pr-16 space-y-4 rounded-md">
                     <div className="flex items-center">
                         <label
                             htmlFor="terms"
