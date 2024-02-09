@@ -8,6 +8,7 @@ import ApplyChangesButton from './components/ApplyChangesButton'
 import EventCollapsible from './components/EventCollapsible'
 import { useCategoryStore } from '@/store/categories.store'
 
+export const revalidate = 0
 
 
 async function page() {

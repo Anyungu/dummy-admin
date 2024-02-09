@@ -65,8 +65,6 @@ type Props = {
     category: CategoryProps[]
 }
 function ClientStoreInitializer({ category, homePage }: Props) {
-    console.log(category)
-    console.log(homePage)
 
     useEffect(() => {
         useHomePageStore.setState({ ...useHomePageStore.getState(), ...homePage });
