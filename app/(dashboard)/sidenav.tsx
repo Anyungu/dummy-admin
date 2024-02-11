@@ -2,27 +2,32 @@
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import { HomeIcon } from '@radix-ui/react-icons';
 
+const IS_ACTIVE = `flex text-white items-center px-5 py-3 space-x-2 hover:bg-indigo-500 hover:text-gray-200 bg-indigo-500`
+const IS_NOT_ACTIVE = `flex text-white items-center px-5 py-3 space-x-2 hover:bg-indigo-500 hover:text-gray-200`
 function Sidenav() {
   const pathName = usePathname();
+  console.log(pathName)
 
-  const isActive = (path: string) => pathName === path;
+  const isActive = (path: string) => pathName == path;
 
   return (
-    <div className="w-64 bg-gray-800 text-white flex flex-col font-semibold px-5 py-16 space-y-4">
-      <div className={isActive('/pages/homepage') ? 'text-blue-500' : ''}>
-        <Link href="/pages/homepage">Pages</Link>
+    <div className="w-64 bg-gray-8000text-white flex flex-col font-semibold py-16">
+      <div className={isActive('/pages/homepage') ? IS_ACTIVE : IS_NOT_ACTIVE}>
+        <HomeIcon />
+        <div>Pages</div>
       </div>
-      <div className={isActive('/pages/homepage') ? 'text-blue-500 ml-4' : 'ml-4'}>
+      <div className={`pl-10 ${isActive('/pages/homepage') ? IS_ACTIVE : IS_NOT_ACTIVE}`}>
         <Link href="/pages/homepage">Homepage</Link>
       </div>
-      <div className={isActive('/pages/categories') ? 'text-blue-500 ml-4' : 'ml-4'}>
+      <div className={`pl-10 ${isActive('/pages/categories') ? IS_ACTIVE : IS_NOT_ACTIVE}`}>
         <Link href="/pages/categories">Categories</Link>
       </div>
-      <div className={isActive('/events') ? 'text-blue-500' : ''}>
+      <div className={isActive('/events') ? IS_ACTIVE : IS_NOT_ACTIVE}>
         <Link href="/events">Events</Link>
       </div>
-      <div className={isActive('/tickets') ? 'text-blue-500' : ''}>
+      <div className={isActive('/tickets') ? IS_ACTIVE : IS_NOT_ACTIVE}>
         <Link href="/tickets">Tickets</Link>
       </div>
     </div>
