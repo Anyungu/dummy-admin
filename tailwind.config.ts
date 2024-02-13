@@ -7,7 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -24,6 +24,17 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        primaryDark: "#1A2533",
+        primaryLight: "#F9F9F9",
+        primaryPurple: "#C95FF4",
+        primaryGreen: "#84ECA0",
+        secondaryOrange: "#FC6535",
+        secondaryYellow: "#F8CB2E",
+        secondaryBlue: "#87C2FD",
+        secondaryPink: "#FD7DA6",
+        systemDark: "#AEAEAE",
+        lightBorder: "#E3E3E3",
+        systemLight: "#F9F9F9",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
