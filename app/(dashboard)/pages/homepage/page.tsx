@@ -11,6 +11,7 @@ import BannerCollapsible from './components/BannerCollapsible'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import StripCollapsible from './components/StripCollapsible'
 
 export const revalidate = 0
 
@@ -43,6 +44,7 @@ async function page() {
       <ClientStoreInitializer homePage={data[0]} category={data[1]} />
       <Title title='Homepage' />
       <BannerCollapsible />
+      <StripCollapsible />
       <CategoryCollapsible />
       <EventCollapsible />
       <div className='flex w-full justify-end'>

@@ -52,13 +52,16 @@ export type HomePageStore = {
     },
     updateSectionEventField: (index: number, eventUpdates: Partial<SectionEvent>) => void,
     addNewSectionEvent: () => void,
-    updateStripContent: (index: number, eventUpdates: Partial<StripContent>) => void,
+    updateStripContentField: (index: number, sdtripUpdates: Partial<StripContent>) => void,
+    addNewStripContent: () => void,
     addNewCategoryTab: () => void,
-    updateCategoryTabs: (index: number, eventUpdates: Partial<CategoryTab>) => void,
+    updateCategoryTabs: (index: number, categoryUpdates: Partial<CategoryTab>) => void,
     updateBanner: (bannerUpdates: Partial<BannerContent>) => void,
     setUpdating: (value: boolean) => void,
     deleteSectionEvent: (index: number) => void,
     deleteCategoryTab: (index: number) => void,
+    deleteStripContent: (index: number) => void,
+
 }
 
 export const useHomePageStore = create<HomePageStore>((set) => ({
@@ -84,7 +87,7 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
         return { ...state, sectionEvents: updatedSectionEvents };
     }),
 
-    updateStripContent: (index: number, stripUpdates: Partial<StripContent>) => set((state) => {
+    updateStripContentField: (index: number, stripUpdates: Partial<StripContent>) => set((state) => {
         if (index < 0 || index >= state.strip.length) {
             console.warn('Index out of bounds');
             return state; // Return the current state if out of bounds
@@ -128,6 +131,16 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
         return { ...state, sectionEvents: newSectionEvents };
     }),
 
+    addNewStripContent: () => set((state) => {
+        const extraStripContent: StripContent = {
+            question: '',
+            answer: ''
+        }
+
+        const newStripContent = [...state.strip, extraStripContent]
+        return { ...state, strip: newStripContent };
+    }),
+
     addNewCategoryTab: () => set((state) => {
         const extraCategoryTab: CategoryTab = {
             active: false,
@@ -160,5 +173,14 @@ export const useHomePageStore = create<HomePageStore>((set) => ({
         }
         const filteredSectionEvents = state.sectionEvents.filter((_, i) => i !== index);
         return { ...state, sectionEvents: filteredSectionEvents };
+    }),
+
+    deleteStripContent: (index: number) => set((state) => {
+        if (index < 0 || index >= state.strip.length) {
+            console.warn('Index out of bounds for deleting section event');
+            return state;
+        }
+        const filteredStripContent = state.strip.filter((_, i) => i !== index);
+        return { ...state, strip: filteredStripContent };
     })
 }));
