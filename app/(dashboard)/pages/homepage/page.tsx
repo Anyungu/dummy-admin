@@ -8,11 +8,24 @@ import ApplyChangesButton from './components/ApplyChangesButton'
 import EventCollapsible from './components/EventCollapsible'
 import { useCategoryStore } from '@/store/categories.store'
 import BannerCollapsible from './components/BannerCollapsible'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 export const revalidate = 0
 
 
 async function page() {
+
+  const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
 
   const data = await Promise.all([
     get('admin/home-page-config'),
