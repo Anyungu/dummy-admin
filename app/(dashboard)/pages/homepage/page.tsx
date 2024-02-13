@@ -33,11 +33,8 @@ async function page() {
     get('events/categories/all/categories')
   ])
 
-  //fatch and set state
-
   useHomePageStore.setState(data[0])
   useCategoryStore.setState(data[1])
-  // console.log(data)
 
   return (
     <div className='my-6 mx-2 space-y-6'>

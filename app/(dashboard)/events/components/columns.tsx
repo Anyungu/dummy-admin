@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+
 export type Event = {
     id: string
     eventStatus: string
@@ -33,7 +32,7 @@ export const columns: ColumnDef<Event>[] = [
         accessorKey: "tickets",
         cell: ({ row }) => {
             const current = row?.original as any
-            return <div className="text-right font-medium">{current?.tickets?.length}</div>
+            return <div className="font-medium">{current?.tickets?.length}</div>
         },
     }
 

@@ -28,6 +28,9 @@ function Sidenav() {
       <div className={isActive('/tickets') ? IS_ACTIVE : IS_NOT_ACTIVE}>
         <Link href="/tickets">Tickets</Link>
       </div>
+      <div className={isActive('/users') ? IS_ACTIVE : IS_NOT_ACTIVE}>
+        <Link href="/users">Users</Link>
+      </div>
     </div>
   );
 }

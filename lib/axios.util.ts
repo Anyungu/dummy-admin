@@ -24,7 +24,6 @@ axiosInstance.interceptors.response.use(
 
 export const get = async (url: string, queryParams?: QueryParams) => {
 
-    console.log('here', queryParams)
     try {
         const response = queryParams ? await axiosInstance.get(url, { params: queryParams }) : await axiosInstance.get(url);
         return response.data;

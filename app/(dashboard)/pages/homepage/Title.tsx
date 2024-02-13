@@ -17,7 +17,7 @@ function Title({ title }: TitleProps) {
                 {title}
             </div>
             <div>
-                <PlusIcon width={28} height={28} color='green' onClick={() => { console.log(1); addNewSectionEvent() }} />
+                <PlusIcon width={28} height={28} color='green' onClick={() => { addNewSectionEvent() }} />
             </div>
         </div>
     )

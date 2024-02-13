@@ -35,19 +35,22 @@ async function page({ params }: Props) {
         redirect('/login');
     }
 
-    const eventNow = await get(`events`, {id: params?.slug})
+    const eventNow = await get(`events/${params?.slug}`, { id: params?.slug })
 
 
     return (
-        <div>
-            {JSON.stringify(eventNow)}
-            <div>
+        <div className='mx-4 my-6'>
+            <div className='flex flex-row w-full'>
                 <Image
-                    src={''}
-                    width={500}
-                    height={500}
+                    className='rounded-xl'
+                    src={eventNow?.eventImageUrl}
+                    width={200}
+                    height={200}
                     alt="Picture of the author"
                 />
+                <div className='flex flex-col items-center justify-center w-full font-bold text-xl'>
+                    {eventNow?.eventName?.name}
+                </div>
             </div>
 
         </div>
