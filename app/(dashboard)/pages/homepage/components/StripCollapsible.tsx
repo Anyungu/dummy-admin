@@ -4,7 +4,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useHomePageStore } from '@/store/homepage.store'
 import { DragHandleDots2Icon, PlusIcon, TriangleDownIcon, TriangleUpIcon } from '@radix-ui/react-icons'
 import React, { useState } from 'react'
-import { NestedCatgoryCollapsibe } from './NestedCategoryCollapsible'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import StripContentNestedCollapsible from './StripContentNestedCollapsible'
