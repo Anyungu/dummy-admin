@@ -8,8 +8,6 @@ const IS_ACTIVE = `flex text-white items-center px-5 py-3 space-x-2 hover:bg-ind
 const IS_NOT_ACTIVE = `flex text-black items-center px-5 py-3 space-x-2 hover:bg-indigo-500 hover:text-gray-200`
 function Sidenav() {
   const pathName = usePathname();
-  console.log(pathName)
-
   const isActive = (path: string) => pathName == path;
 
   return (

@@ -40,7 +40,6 @@ const SignIn = () => {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
         signIn(values)
     }
 
@@ -52,7 +51,6 @@ const SignIn = () => {
             email: formData.email,
             password: formData.password,
         });
-        // console.log(error)
 
         if (error) {
             setErrorMsg(error.message);
