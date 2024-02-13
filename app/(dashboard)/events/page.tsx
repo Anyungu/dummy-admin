@@ -22,7 +22,7 @@ async function page() {
     const data = await get('admin/events/admin-get-all-events');
 
     return (
-        <div>
+        <div className='my-6 mx-4'>
             <DataTable columns={columns} data={data} />
 
         </div>
