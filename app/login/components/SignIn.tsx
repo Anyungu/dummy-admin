@@ -54,9 +54,12 @@ const SignIn = () => {
 
         if (error) {
             setErrorMsg(error.message);
+        } else {
+            redirect('/pages/homepage')
+
         }
 
-        redirect('/pages/homepage')
+
     }
 
     return (
