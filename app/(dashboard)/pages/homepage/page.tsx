@@ -20,10 +20,10 @@ async function page() {
   const supabase = createServerComponentClient({ cookies });
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!user) {
+  if (!session) {
     redirect('/login');
   }
 
@@ -48,7 +48,6 @@ async function page() {
       <div className='flex w-full justify-end'>
         <ApplyChangesButton />
       </div>
-
 
     </div>
   )
