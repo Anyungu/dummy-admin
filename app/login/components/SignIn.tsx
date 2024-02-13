@@ -15,7 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 
 
@@ -28,6 +28,8 @@ const formSchema = z.object({
 
 const SignIn = () => {
     const supabase = createClientComponentClient();
+
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -55,7 +57,7 @@ const SignIn = () => {
         if (error) {
             setErrorMsg(error.message);
         } else {
-            redirect('/pages/homepage')
+            router.push('/pages/homepage')
 
         }
 
