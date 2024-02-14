@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { formatDayAndDateTime } from '@/lib/utils';
 import ClientStoreInitializer from '@/components/ClientStoreInitializer';
 import SpecificEventForm from '../components/SpecificEventForm';
+import EditButton from '../components/EditButton';
 
 export const revalidate = 0
 
@@ -54,28 +55,33 @@ async function page({ params }: Props) {
         <div className='mx-4 my-6 h-[70%]'>
             <ClientStoreInitializer specificEvent={eventNow} />
             <div className='flex flex-row w-full justify-between'>
-                <Image
-                    className='rounded-xl'
-                    src={eventNow?.eventImageUrl}
-                    width={200}
-                    height={200}
-                    alt="Picture of the author"
-                />
-                <div className='flex flex-col w-full space-y-2 mt-4 ml-8'>
-                    <div className='text-4xl font-extrabold text-gray-600'>
-                        {eventNow?.eventName?.name}
-                    </div>
-                    <div className='text-lg text-gray-700'>
-                        {formatDayAndDateTime(eventNow?.eventStartDate, eventNow?.eventTime)}
-                    </div>
-                    <div>
-                        {eventNow?.eventStatus === EventStatusEnum?.ACTIVE && <Badge variant='default' className=' bg-green-400'>{eventNow?.eventStatus}</Badge>}
-                        {eventNow?.eventStatus === EventStatusEnum?.PENDING && <Badge variant='default' className=' bg-blue-400'>{eventNow?.eventStatus}</Badge>}
-                        {eventNow?.eventStatus === EventStatusEnum?.HIDDEN && <Badge variant='default' className=' bg-gray-400'>{eventNow?.eventStatus}</Badge>}
-                        {eventNow?.eventStatus === EventStatusEnum?.ENDED && <Badge variant='default' className=' bg-red-400'>{eventNow?.eventStatus}</Badge>}
+                <div className='flex flex-row'>
+                    <Image
+                        className='rounded-xl'
+                        src={eventNow?.eventImageUrl}
+                        width={200}
+                        height={200}
+                        alt="Picture of the author"
+                    />
+                    <div className='flex flex-col w-full space-y-2 mt-4 ml-8'>
+                        <div className='text-4xl font-extrabold text-gray-600'>
+                            {eventNow?.eventName?.name}
+                        </div>
+                        <div className='text-lg text-gray-700'>
+                            {formatDayAndDateTime(eventNow?.eventStartDate, eventNow?.eventTime)}
+                        </div>
+                        <div>
+                            {eventNow?.eventStatus === EventStatusEnum?.ACTIVE && <Badge variant='default' className=' bg-green-400'>{eventNow?.eventStatus}</Badge>}
+                            {eventNow?.eventStatus === EventStatusEnum?.PENDING && <Badge variant='default' className=' bg-blue-400'>{eventNow?.eventStatus}</Badge>}
+                            {eventNow?.eventStatus === EventStatusEnum?.HIDDEN && <Badge variant='default' className=' bg-gray-400'>{eventNow?.eventStatus}</Badge>}
+                            {eventNow?.eventStatus === EventStatusEnum?.ENDED && <Badge variant='default' className=' bg-red-400'>{eventNow?.eventStatus}</Badge>}
+
+                        </div>
 
                     </div>
-
+                </div>
+                <div>
+                    <EditButton />
                 </div>
 
             </div>

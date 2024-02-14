@@ -3,12 +3,14 @@
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
+import { useSpecificEventStore } from '@/store/specific-event.store'
 import { Loader2Icon } from 'lucide-react'
 import React, { useState } from 'react'
 
 function SaveEventButton() {
 
     const [updating, setUpdating] = useState<boolean>(false)
+    const { isNotEditMode } = useSpecificEventStore()
 
     return (
         <Button className='px-4 py-2 bg-green-500 space-x-2'
@@ -40,7 +42,7 @@ function SaveEventButton() {
                 //         })
                 //     })
             }}
-            disabled={updating}
+            disabled={updating || isNotEditMode()}
         >
             <div>
                 Save changes

@@ -106,7 +106,9 @@ type DirectSpecificEvent = {
     eventImageUrl: string,
 }
 
-type NestedSpecificEvent = {
+type NestedSpecificEvent = EventName | Location | GameName | Team | SecondTeam
+
+type NestedSpecificEventKey = {
     eventName: EventName | null,
     location: Location | null,
     gameName: GameName | null,
@@ -114,13 +116,15 @@ type NestedSpecificEvent = {
     secondTeam: SecondTeam | null
 }
 
-type ArraySpecificEvent = {
+type ArraySpecificEvent = EventCategory | EventSubcategory | Artist | Ticket
+
+type ArraySpecificEventKey = {
     categories: EventCategory[],
     subcategories: EventSubcategory[],
     artists: Artist[],
     tickets: Ticket[],
-}
 
+}
 
 export type SpecificEventStore = {
     mode: 'view' | 'edit',
@@ -145,12 +149,13 @@ export type SpecificEventStore = {
     secondTeam: SecondTeam | null
 
     updateDirectSpecificEvent: (eventUpdates: Partial<DirectSpecificEvent>) => void,
-    updateNestedSpecificEvent: (primaryKey: string, eventUpdates: Partial<NestedSpecificEvent>) => void,
-    updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEvent, eventUpdates: Partial<ArraySpecificEvent>) => void,
+    updateNestedSpecificEvent: (primaryKey: keyof NestedSpecificEventKey, eventUpdates: Partial<NestedSpecificEvent>) => void,
+    updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEventKey, eventUpdates: Partial<ArraySpecificEvent>) => void,
+    isNotEditMode: () => boolean
 
 }
 
-export const useSpecificEventStore = create<SpecificEventStore>((set) => ({
+export const useSpecificEventStore = create<SpecificEventStore>((set, get) => ({
     mode: 'view',
     eventStatus: EventStatusEnum.ACTIVE,
     hotEvent: false,
@@ -172,14 +177,15 @@ export const useSpecificEventStore = create<SpecificEventStore>((set) => ({
     team: null,
     secondTeam: null,
     updateDirectSpecificEvent: (eventUpdates: Partial<DirectSpecificEvent>) => set((state) => {
+        console.log(eventUpdates)
         return { ...state, ...eventUpdates };
     }),
 
-    updateNestedSpecificEvent: (primaryKey: string, eventUpdates: Partial<NestedSpecificEvent>) => set((state) => {
+    updateNestedSpecificEvent: (primaryKey: keyof NestedSpecificEventKey, eventUpdates: Partial<NestedSpecificEvent>) => set((state) => {
         return { ...state, [primaryKey]: { ...eventUpdates } };
     }),
 
-    updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEvent, eventUpdates: Partial<ArraySpecificEvent>) => set((state) => {
+    updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEventKey, eventUpdates: Partial<ArraySpecificEvent>) => set((state) => {
 
         if (index < 0 || index >= state[primaryKey]?.length) {
             console.warn('Index out of bounds');
@@ -192,5 +198,10 @@ export const useSpecificEventStore = create<SpecificEventStore>((set) => ({
         return { ...state, [primaryKey]: updatedEvent };
     }),
 
+    isNotEditMode: () => {
+        const { mode } = get()
+        return mode !== 'edit'
+    }
 
 }));
+

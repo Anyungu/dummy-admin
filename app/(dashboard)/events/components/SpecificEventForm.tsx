@@ -5,6 +5,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import SaveEventButton from '../components/SaveEventButton';
 import { useSpecificEventStore } from '@/store/specific-event.store';
+import { useCategoryStore } from '@/store/categories.store';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import GeneralDatePicker from '../../components/GeneralDatePicker';
 
 function SpecificEventForm() {
 
@@ -21,15 +24,15 @@ function SpecificEventForm() {
         gameName,
         team,
         secondTeam,
-        mode,
+        isNotEditMode,
         updateArraySpecificEvent,
         updateDirectSpecificEvent,
         updateNestedSpecificEvent
     } = useSpecificEventStore();
 
-    const isEditMode = () => {
-        return mode === 'edit' ? true : false;
-    }
+    const { categories: allCategories } = useCategoryStore()
+
+
 
     return (
         <>
@@ -38,22 +41,27 @@ function SpecificEventForm() {
                     <div className='grid grid-cols-3 gap-6'>
                         <div className="flex flex-col space-y-1">
                             <label
-                                htmlFor="title"
+                                htmlFor="event"
                                 className="text-xs text-gray-600 pl-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                                Name
+                                Event
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={eventName?.name} disabled={isEditMode()} className=' border-0' />
+                            <Input id="name" type="text" placeholder="Event"
+                                value={eventName?.name}
+                                disabled={isNotEditMode()}
+                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                onChange={(e) => { updateNestedSpecificEvent('eventName', { name: e.target.value }) }} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
                             <label
-                                htmlFor="title"
+                                htmlFor="loc"
                                 className="text-xs text-gray-600 pl-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                                 Location
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={location?.name} disabled={isEditMode()} className=' border-0' />
+                            <Input id="loc" type="text" placeholder="Locationtle" value={location?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                onChange={(e) => { updateNestedSpecificEvent('location', { name: e.target.value }) }} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -63,7 +71,21 @@ function SpecificEventForm() {
                             >
                                 Category
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={categories[0]?.name} disabled={isEditMode()} className=' border-0' />
+                            <Select value={`${categories[0]?.id}`}
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateArraySpecificEvent(0, 'categories', { id: parseInt(value) })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select a category" />
+                                </SelectTrigger>
+
+                                <SelectContent >
+                                    {allCategories.map((category, idx) => {
+                                        return <SelectItem key={idx} value={`${category?.id}`}>{category?.name}</SelectItem>
+                                    })}
+
+                                </SelectContent>
+                            </Select>
                         </div>
 
                     </div>
@@ -71,12 +93,12 @@ function SpecificEventForm() {
                     <div className='grid grid-cols-3 gap-6'>
                         <div className="flex flex-col space-y-1">
                             <label
-                                htmlFor="title"
+                                htmlFor="startDate"
                                 className="text-xs text-gray-600 pl-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                                 Date
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={`${eventStartDate}`} disabled={isEditMode()} className=' border-0' />
+                            <GeneralDatePicker />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -86,7 +108,7 @@ function SpecificEventForm() {
                             >
                                 End Date
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={`${eventEndDate}`} disabled={isEditMode()} className=' border-0' />
+                            <GeneralDatePicker />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -96,7 +118,7 @@ function SpecificEventForm() {
                             >
                                 Time
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={eventTime} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={eventTime} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                     </div>
@@ -109,7 +131,7 @@ function SpecificEventForm() {
                             >
                                 Tickets
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={tickets?.length} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={tickets?.length} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -119,7 +141,7 @@ function SpecificEventForm() {
                             >
                                 Artists
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={artists?.length} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={artists?.length} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -129,7 +151,7 @@ function SpecificEventForm() {
                             >
                                 Event Type
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={`${eventType}`} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={`${eventType}`} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                     </div>
@@ -142,7 +164,7 @@ function SpecificEventForm() {
                             >
                                 Game Type
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={`${gameType}`} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={`${gameType}`} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -152,7 +174,7 @@ function SpecificEventForm() {
                             >
                                 Game Name
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={gameName?.name} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={gameName?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                     </div>
@@ -165,7 +187,7 @@ function SpecificEventForm() {
                             >
                                 Team
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={team?.name} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={team?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -175,7 +197,7 @@ function SpecificEventForm() {
                             >
                                 2nd Team
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={secondTeam?.name} disabled={isEditMode()} className=' border-0' />
+                            <Input id="title" type="text" placeholder="Title" value={secondTeam?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
                         </div>
                     </div>
 
@@ -191,7 +213,7 @@ function SpecificEventForm() {
                         >
                             Is popular?
                         </label>
-                        <Checkbox disabled={isEditMode()} id="terms" color='#84ECA0' checked={true} />
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={true} />
 
                     </div>
                     <div className='flex flex-col space-y-2'>
@@ -202,7 +224,7 @@ function SpecificEventForm() {
                         >
                             Is hot?
                         </label>
-                        <Checkbox disabled={isEditMode()} id="terms" color='#84ECA0' checked={true} />
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={true} />
 
                     </div>
 
@@ -214,7 +236,7 @@ function SpecificEventForm() {
                         >
                             Is approved?
                         </label>
-                        <Checkbox disabled={isEditMode()} id="terms" color='#84ECA0' checked={true} />
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={true} />
 
                     </div>
 
