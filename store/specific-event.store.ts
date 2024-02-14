@@ -1,47 +1,5 @@
-'use client'
-
-import { useCategoryStore } from '@/store/categories.store'
-import { useHomePageStore } from '@/store/homepage.store'
-import { useSpecificEventStore } from '@/store/specific-event.store'
-import React, { useEffect } from 'react'
-
-enum HomePageEventOrderOptions {
-    CREATED_AT = 'createdAt',
-    START_DATE = 'startDate',
-}
-
-enum SectionEventLayout {
-    CAROUSEL = 'carousel',
-    HERO_BANNER = 'heroBanner',
-    SWIM_LINE = 'swimLine',
-}
-
-type CategoryTab = {
-    active: boolean,
-    title: string,
-    image: string,
-    categoryId: number
-}
-
-type SectionEvent = {
-    active: boolean,
-    title: string,
-    image: string,
-    categoryId: number,
-    orderBy: HomePageEventOrderOptions,
-    limit: number,
-    layout: SectionEventLayout,
-}
-
-type StripContent = {
-    question: string,
-    answer: string
-}
-
-type BannerContent = {
-    show: boolean,
-    categoryTabsShow: boolean,
-}
+import { create } from 'zustand'
+type CheckedState = boolean | 'indeterminate' | undefined;
 
 enum EventStatusEnum {
     ACTIVE = 'פָּעִיל',
@@ -138,8 +96,8 @@ type SecondTeam = {
 type DirectSpecificEvent = {
     mode: 'view' | 'edit',
     eventStatus: EventStatusEnum,
-    hotEvent: boolean,
-    popularEvent: boolean,
+    hotEvent: CheckedState,
+    popularEvent: CheckedState,
     eventType: EventTypeEnum | null,
     gameType: GameTypeEnum | null,
     eventStartDate: Date | null,
@@ -164,11 +122,11 @@ type ArraySpecificEvent = {
 }
 
 
-export type SpecificEventProps = {
+export type SpecificEventStore = {
     mode: 'view' | 'edit',
     eventStatus: EventStatusEnum,
-    hotEvent: boolean,
-    popularEvent: boolean,
+    hotEvent: CheckedState,
+    popularEvent: CheckedState,
     id: number,
     eventType: EventTypeEnum | null,
     gameType: GameTypeEnum | null,
@@ -186,46 +144,53 @@ export type SpecificEventProps = {
     team: Team | null,
     secondTeam: SecondTeam | null
 
+    updateDirectSpecificEvent: (eventUpdates: Partial<DirectSpecificEvent>) => void,
+    updateNestedSpecificEvent: (primaryKey: string, eventUpdates: Partial<NestedSpecificEvent>) => void,
+    updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEvent, eventUpdates: Partial<ArraySpecificEvent>) => void,
+
 }
 
-type HomePageProps = {
-    versionManagement: boolean,
-    texts?: {},
-    banner?: BannerContent,
-    categoryTabs?: CategoryTab[],
-    sectionEvents?: SectionEvent[],
-    strip?: StripContent[],
-    footer?: {
-        text: '',
-    }
-}
+export const useSpecificEventStore = create<SpecificEventStore>((set) => ({
+    mode: 'view',
+    eventStatus: EventStatusEnum.ACTIVE,
+    hotEvent: false,
+    popularEvent: false,
+    id: 0,
+    eventType: null,
+    gameType: null,
+    eventStartDate: null,
+    eventEndDate: null,
+    eventTime: '',
+    eventImageUrl: '',
+    tickets: [],
+    eventName: null,
+    location: null,
+    artists: [],
+    gameName: null,
+    categories: [],
+    subcategories: [],
+    team: null,
+    secondTeam: null,
+    updateDirectSpecificEvent: (eventUpdates: Partial<DirectSpecificEvent>) => set((state) => {
+        return { ...state, ...eventUpdates };
+    }),
 
-type CategoryProps = {
-    id: number,
-    name: string,
-    categoryIcon: string,
-}
+    updateNestedSpecificEvent: (primaryKey: string, eventUpdates: Partial<NestedSpecificEvent>) => set((state) => {
+        return { ...state, [primaryKey]: { ...eventUpdates } };
+    }),
 
-type Props = {
-    homePage?: HomePageProps,
-    category?: CategoryProps[],
-    specificEvent?: SpecificEventProps
-}
-function ClientStoreInitializer({ category, homePage, specificEvent }: Props) {
+    updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEvent, eventUpdates: Partial<ArraySpecificEvent>) => set((state) => {
 
-    useEffect(() => {
-        if (homePage) {
-            useHomePageStore.setState(homePage);
+        if (index < 0 || index >= state[primaryKey]?.length) {
+            console.warn('Index out of bounds');
+            return state; // Return the current state if out of bounds
         }
-        if (category) {
-            useCategoryStore.setState({ categories: category });
-        }
-        if (specificEvent) {
-            useSpecificEventStore.setState(specificEvent);
-        }
-    }, [category, homePage, specificEvent]);
+        const updatedEvent = state[primaryKey].map((item, i) =>
+            i === index ? { ...item, ...eventUpdates } : item
+        );
 
-    return null;
-}
+        return { ...state, [primaryKey]: updatedEvent };
+    }),
 
-export default ClientStoreInitializer
+
+}));

@@ -10,6 +10,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
+
 } from "@tanstack/react-table"
 
 import {
@@ -23,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
+import { usePathname, useRouter } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -38,6 +40,9 @@ export function DataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
     )
+
+    const path = usePathname();
+    const router = useRouter()
 
     const table = useReactTable({
         data,
@@ -92,6 +97,11 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    onClick={() => {
+                                        const currentRow = row?.original as any
+                                        router.push(`${path}/${currentRow?.id}`)
+                                    }}
+                                    className=" cursor-pointer"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>

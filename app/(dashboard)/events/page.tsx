@@ -24,7 +24,6 @@ async function page() {
     return (
         <div className='my-6 mx-4'>
             <DataTable columns={columns} data={data} />
-
         </div>
     )
 }
