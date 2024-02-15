@@ -47,13 +47,15 @@ async function page({ params }: Props) {
         redirect('/login');
     }
 
-    const eventNow = await get(`events/${params?.slug}`, { id: params?.slug })
-    console.log(eventNow)
+    const [eventNow, categories] = await Promise.all([
+        get(`events/${params?.slug}`, { id: params?.slug }),
+        get('events/categories/all/categories')
+    ])
 
 
     return (
         <div className='mx-4 my-6 h-[70%]'>
-            <ClientStoreInitializer specificEvent={eventNow} />
+            <ClientStoreInitializer specificEvent={eventNow} category={categories} />
             <div className='flex flex-row w-full justify-between'>
                 <div className='flex flex-row'>
                     <Image
