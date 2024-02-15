@@ -8,6 +8,24 @@ import { useSpecificEventStore } from '@/store/specific-event.store';
 import { useCategoryStore } from '@/store/categories.store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GeneralDatePicker from '../../components/GeneralDatePicker';
+import { Pencil1Icon } from '@radix-ui/react-icons';
+
+enum EventStatusEnum {
+    ACTIVE = 'פָּעִיל',
+    PENDING = 'ממתין ל',
+    HIDDEN = 'מוּסתָר',
+    ENDED = 'הסתיים',
+}
+
+enum EventTypeEnum {
+    ONE_ARTIST = 'אמן אחד',
+    SEVERAL_ARTISTS = 'כמה אמנים',
+}
+
+enum GameTypeEnum {
+    REGULAR = 'רגיל',
+    TOURNAMENT = 'טורניר',
+}
 
 function SpecificEventForm() {
 
@@ -24,13 +42,20 @@ function SpecificEventForm() {
         gameName,
         team,
         secondTeam,
+        hotEvent,
+        popularEvent,
+        eventStatus,
         isNotEditMode,
         updateArraySpecificEvent,
         updateDirectSpecificEvent,
-        updateNestedSpecificEvent
+        updateNestedSpecificEvent,
+        getEventTypeEnum,
+        getGameTypeEnum
     } = useSpecificEventStore();
 
     const { categories: allCategories } = useCategoryStore()
+    const eventTypeDropDownData = getEventTypeEnum()
+    const gameTypeDropDownData = getGameTypeEnum()
 
 
 
@@ -50,7 +75,7 @@ function SpecificEventForm() {
                                 value={eventName?.name}
                                 disabled={isNotEditMode()}
                                 className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('eventName', { name: e.target.value }) }} />
+                                onChange={(e) => { updateNestedSpecificEvent('eventName', { name: e.target.value, eventNameApprovalStatus: 'approved' }) }} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -61,7 +86,7 @@ function SpecificEventForm() {
                                 Location
                             </label>
                             <Input id="loc" type="text" placeholder="Locationtle" value={location?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('location', { name: e.target.value }) }} />
+                                onChange={(e) => { updateNestedSpecificEvent('location', { name: e.target.value, locationApprovalStatus: 'approved' }) }} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -131,7 +156,10 @@ function SpecificEventForm() {
                             >
                                 Tickets
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={tickets?.length} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <div className={`px-3 w-full text-sm py-2 items-center flex flex-row justify-between ${isNotEditMode() ? 'border-0 text-gray-400' : 'border border-1 rounded-md'}`}>
+                                <div>{tickets?.length}</div>
+                                <div className={`${isNotEditMode() ? 'hidden' : ' block'}`}><Pencil1Icon /></div>
+                            </div>
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -141,7 +169,10 @@ function SpecificEventForm() {
                             >
                                 Artists
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={artists?.length} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <div className={`px-3 w-full text-sm py-2 items-center flex flex-row justify-between ${isNotEditMode() ? 'border-0 text-gray-400' : 'border border-1 rounded-md'}`}>
+                                <div>{artists?.length}</div>
+                                <div className={`${isNotEditMode() ? 'hidden' : 'block'}`}><Pencil1Icon /></div>
+                            </div>
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -151,7 +182,21 @@ function SpecificEventForm() {
                             >
                                 Event Type
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={`${eventType}`} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <Select value={`${eventType}`}
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateDirectSpecificEvent({ eventType: value as EventTypeEnum })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select a category" />
+                                </SelectTrigger>
+
+                                <SelectContent >
+                                    {eventTypeDropDownData.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.value}`}>{type?.text}</SelectItem>
+                                    })}
+
+                                </SelectContent>
+                            </Select>
                         </div>
 
                     </div>
@@ -164,7 +209,21 @@ function SpecificEventForm() {
                             >
                                 Game Type
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={`${gameType}`} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <Select value={`${gameType}`}
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateDirectSpecificEvent({ gameType: value as GameTypeEnum })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select a category" />
+                                </SelectTrigger>
+
+                                <SelectContent >
+                                    {gameTypeDropDownData.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.value}`}>{type?.text}</SelectItem>
+                                    })}
+
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -174,7 +233,10 @@ function SpecificEventForm() {
                             >
                                 Game Name
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={gameName?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <Input id="title" type="text" placeholder="Title" value={gameName?.name} disabled={isNotEditMode()}
+                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                onChange={(e) => { updateNestedSpecificEvent('gameName', { name: e.target.value, gameNameApprovalStatus: 'approved' }) }} />
+
                         </div>
 
                     </div>
@@ -187,7 +249,8 @@ function SpecificEventForm() {
                             >
                                 Team
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={team?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <Input id="title" type="text" placeholder="Title" value={team?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                onChange={(e) => { updateNestedSpecificEvent('team', { name: e.target.value, teamApprovalStatus: 'approved' }) }} />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -197,7 +260,8 @@ function SpecificEventForm() {
                             >
                                 2nd Team
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={secondTeam?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <Input id="title" type="text" placeholder="Title" value={secondTeam?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                onChange={(e) => { updateNestedSpecificEvent('secondTeam', { name: e.target.value, secondTeamApprovalStatus: 'approved' }) }} />
                         </div>
                     </div>
 
@@ -213,7 +277,8 @@ function SpecificEventForm() {
                         >
                             Is popular?
                         </label>
-                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={true} />
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={popularEvent}
+                            onCheckedChange={(val) => { updateDirectSpecificEvent({ popularEvent: val }) }} />
 
                     </div>
                     <div className='flex flex-col space-y-2'>
@@ -224,7 +289,8 @@ function SpecificEventForm() {
                         >
                             Is hot?
                         </label>
-                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={true} />
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={hotEvent}
+                            onCheckedChange={(val) => { updateDirectSpecificEvent({ hotEvent: val }) }} />
 
                     </div>
 
@@ -234,9 +300,42 @@ function SpecificEventForm() {
                             htmlFor="terms"
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                            Is approved?
+                            Is active?
                         </label>
-                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={true} />
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={eventStatus === EventStatusEnum.ACTIVE}
+                            onCheckedChange={(val) => {
+                                updateDirectSpecificEvent({ eventStatus: val === true ? EventStatusEnum.ACTIVE : EventStatusEnum.PENDING })
+                            }} />
+
+                    </div>
+
+                    <div className='flex flex-col space-y-2'>
+
+                        <label
+                            htmlFor="terms"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                            Is pending?
+                        </label>
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={eventStatus === EventStatusEnum.PENDING}
+                            onCheckedChange={(val) => {
+                                updateDirectSpecificEvent({ eventStatus: val === true ? EventStatusEnum.PENDING : EventStatusEnum.ACTIVE })
+                            }} />
+
+                    </div>
+
+                    <div className='flex flex-col space-y-2'>
+
+                        <label
+                            htmlFor="terms"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                            Is hidded?
+                        </label>
+                        <Checkbox disabled={isNotEditMode()} id="terms" color='#84ECA0' checked={eventStatus === EventStatusEnum.HIDDEN}
+                            onCheckedChange={(val) => {
+                                updateDirectSpecificEvent({ eventStatus: val === true ? EventStatusEnum.HIDDEN : EventStatusEnum.ACTIVE })
+                            }} />
 
                     </div>
 

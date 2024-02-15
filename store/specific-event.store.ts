@@ -1,6 +1,13 @@
 import { create } from 'zustand'
 type CheckedState = boolean | 'indeterminate' | undefined;
 
+type SingleDropDownObject = {
+    text: string;
+    value: string;
+};
+
+type ApprovedNotApproved = "approved" | "not_approved"
+
 enum EventStatusEnum {
     ACTIVE = 'פָּעִיל',
     PENDING = 'ממתין ל',
@@ -28,13 +35,13 @@ type Ticket = {
 }
 
 type EventName = {
-    eventNameApprovalStatus: "approved",
+    eventNameApprovalStatus: ApprovedNotApproved,
     id: number,
     name: string,
 }
 
 type Location = {
-    locationApprovalStatus: string;
+    locationApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     locationImageUrl: string;
@@ -43,7 +50,7 @@ type Location = {
 }
 
 type Artist = {
-    artistApprovalStatus: string;
+    artistApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     artistImageUrl: string;
@@ -52,7 +59,7 @@ type Artist = {
 }
 
 type GameName = {
-    gameNameApprovalStatus: string;
+    gameNameApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     createdAt: string;
@@ -76,7 +83,7 @@ type EventSubcategory = {
 }
 
 type Team = {
-    teamApprovalStatus: string;
+    teamApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     teamImageUrl: string | null;
@@ -85,7 +92,7 @@ type Team = {
 }
 
 type SecondTeam = {
-    secondTeamApprovalStatus: string;
+    secondTeamApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     secondTeamImageUrl: string | null;
@@ -151,7 +158,10 @@ export type SpecificEventStore = {
     updateDirectSpecificEvent: (eventUpdates: Partial<DirectSpecificEvent>) => void,
     updateNestedSpecificEvent: (primaryKey: keyof NestedSpecificEventKey, eventUpdates: Partial<NestedSpecificEvent>) => void,
     updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEventKey, eventUpdates: Partial<ArraySpecificEvent>) => void,
-    isNotEditMode: () => boolean
+    isNotEditMode: () => boolean,
+    getEventStatusEnum: () => SingleDropDownObject[],
+    getEventTypeEnum: () => SingleDropDownObject[],
+    getGameTypeEnum: () => SingleDropDownObject[],
 
 }
 
@@ -201,7 +211,27 @@ export const useSpecificEventStore = create<SpecificEventStore>((set, get) => ({
     isNotEditMode: () => {
         const { mode } = get()
         return mode !== 'edit'
-    }
+    },
+
+    getEventStatusEnum: () => {
+        return Object.entries(EventStatusEnum).map(([key, value]) => ({
+            text: value,
+            value: key,
+        }));
+    },
+    getEventTypeEnum: () => {
+        return Object.entries(EventTypeEnum).map(([key, value]) => ({
+            text: value,
+            value: key,
+        }));
+    },
+    getGameTypeEnum: () => {
+        return Object.entries(GameTypeEnum).map(([key, value]) => ({
+            text: value,
+            value: key,
+        }));
+    },
+
 
 }));
 
