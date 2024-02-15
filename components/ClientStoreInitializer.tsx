@@ -5,6 +5,8 @@ import { useHomePageStore } from '@/store/homepage.store'
 import { useSpecificEventStore } from '@/store/specific-event.store'
 import React, { useEffect } from 'react'
 
+type ApprovedNotApproved = "approved" | "not_approved"
+
 enum HomePageEventOrderOptions {
     CREATED_AT = 'createdAt',
     START_DATE = 'startDate',
@@ -70,13 +72,13 @@ type Ticket = {
 }
 
 type EventName = {
-    eventNameApprovalStatus: "approved",
+    eventNameApprovalStatus: ApprovedNotApproved,
     id: number,
     name: string,
 }
 
 type Location = {
-    locationApprovalStatus: string;
+    locationApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     locationImageUrl: string;
@@ -85,7 +87,7 @@ type Location = {
 }
 
 type Artist = {
-    artistApprovalStatus: string;
+    artistApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     artistImageUrl: string;
@@ -94,7 +96,7 @@ type Artist = {
 }
 
 type GameName = {
-    gameNameApprovalStatus: string;
+    gameNameApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     createdAt: string;
@@ -118,7 +120,7 @@ type EventSubcategory = {
 }
 
 type Team = {
-    teamApprovalStatus: string;
+    teamApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     teamImageUrl: string | null;
@@ -127,7 +129,7 @@ type Team = {
 }
 
 type SecondTeam = {
-    secondTeamApprovalStatus: string;
+    secondTeamApprovalStatus: ApprovedNotApproved;
     id: number;
     name: string;
     secondTeamImageUrl: string | null;
@@ -135,33 +137,6 @@ type SecondTeam = {
     updatedAt: string;
 }
 
-type DirectSpecificEvent = {
-    mode: 'view' | 'edit',
-    eventStatus: EventStatusEnum,
-    hotEvent: boolean,
-    popularEvent: boolean,
-    eventType: EventTypeEnum | null,
-    gameType: GameTypeEnum | null,
-    eventStartDate: Date | null,
-    eventEndDate: Date | null,
-    eventTime: string,
-    eventImageUrl: string,
-}
-
-type NestedSpecificEvent = {
-    eventName: EventName | null,
-    location: Location | null,
-    gameName: GameName | null,
-    team: Team | null,
-    secondTeam: SecondTeam | null
-}
-
-type ArraySpecificEvent = {
-    categories: EventCategory[],
-    subcategories: EventSubcategory[],
-    artists: Artist[],
-    tickets: Ticket[],
-}
 
 
 export type SpecificEventProps = {
