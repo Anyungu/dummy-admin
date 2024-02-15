@@ -186,6 +186,7 @@ type Props = {
     category?: CategoryProps[],
     specificEvent?: SpecificEventProps
 }
+
 function ClientStoreInitializer({ category, homePage, specificEvent }: Props) {
 
     useEffect(() => {
