@@ -38,7 +38,7 @@ async function page() {
 
   return (
     <div className='my-6 mx-2 space-y-6'>
-      <ClientStoreInitializer homePage={data[0]} category={data[1]} />
+      <ClientStoreInitializer homePage={data[0]} categories={data[1]} />
       <Title title='Homepage' />
       <BannerCollapsible />
       <StripCollapsible />
