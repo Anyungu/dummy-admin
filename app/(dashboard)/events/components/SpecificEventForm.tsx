@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import SaveEventButton from '../components/SaveEventButton';
@@ -8,7 +8,8 @@ import { useSpecificEventStore } from '@/store/specific-event.store';
 import { useCategoryStore } from '@/store/categories.store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GeneralDatePicker from '../../components/GeneralDatePicker';
-import { Pencil1Icon } from '@radix-ui/react-icons';
+import { CheckCircledIcon, CheckIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import { formatDateToYYYYMMDD } from '@/lib/utils';
 
 enum EventStatusEnum {
     ACTIVE = 'פָּעִיל',
@@ -53,9 +54,22 @@ function SpecificEventForm() {
         getGameTypeEnum
     } = useSpecificEventStore();
 
-    const { categories: allCategories } = useCategoryStore()
+    const { categories: allCategories,
+        eventNames: allEventNames,
+        artists: allArtists,
+        gameNames: allGameNames,
+        teamNames: allTeamNames,
+        locations: allLocations,
+        addSingleValueToDropDown
+    } = useCategoryStore()
     const eventTypeDropDownData = getEventTypeEnum()
     const gameTypeDropDownData = getGameTypeEnum()
+
+    const [localEventName, setLocalEventName] = useState('');
+    const [localLocationName, setLocalLocationName] = useState('');
+    const [localGameName, setLocalGameName] = useState('');
+    const [localTeam, setLocalTeam] = useState('');
+    const [secondLocalTeam, setSecondLocalTeam] = useState('');
 
 
 
@@ -71,11 +85,35 @@ function SpecificEventForm() {
                             >
                                 Event
                             </label>
-                            <Input id="name" type="text" placeholder="Event"
-                                value={eventName?.name}
+                            <Select value={`${eventName?.id}`}
+
                                 disabled={isNotEditMode()}
-                                className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('eventName', { name: e.target.value, eventNameApprovalStatus: 'approved' }) }} />
+                                onValueChange={(value) => updateNestedSpecificEvent('eventName', { id: parseInt(value), eventNameApprovalStatus: 'approved' })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {allEventNames.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                    })}
+                                    {
+                                        <div className="flex flex-row items-center relative space-x-2">
+
+                                            <Input id="name" type="text" placeholder="Event"
+                                                value={localEventName}
+                                                disabled={isNotEditMode()}
+                                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                onChange={(e) => { setLocalEventName(e.target.value) }} />
+
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('eventNames', { id: -allEventNames.length, name: localEventName })} />
+                                        </div>
+                                    }
+
+                                </SelectContent>
+                            </Select>
+
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -85,8 +123,34 @@ function SpecificEventForm() {
                             >
                                 Location
                             </label>
-                            <Input id="loc" type="text" placeholder="Locationtle" value={location?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('location', { name: e.target.value, locationApprovalStatus: 'approved' }) }} />
+                            <Select value={`${location?.id}`}
+
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateNestedSpecificEvent('location', { id: parseInt(value), locationApprovalStatus: 'approved' })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {allLocations.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                    })}
+                                    {
+                                        <div className="flex flex-row items-center relative space-x-2">
+
+                                            <Input id="name" type="text" placeholder="Event"
+                                                value={localLocationName}
+                                                disabled={isNotEditMode()}
+                                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                onChange={(e) => { setLocalLocationName(e.target.value) }} />
+
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('locations', { id: -allLocations.length, name: localLocationName })} />
+                                        </div>
+                                    }
+
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -113,9 +177,6 @@ function SpecificEventForm() {
                             </Select>
                         </div>
 
-                    </div>
-
-                    <div className='grid grid-cols-3 gap-6'>
                         <div className="flex flex-col space-y-1">
                             <label
                                 htmlFor="startDate"
@@ -123,7 +184,10 @@ function SpecificEventForm() {
                             >
                                 Date
                             </label>
-                            <GeneralDatePicker />
+                            <GeneralDatePicker
+                                date={eventStartDate ? new Date(eventStartDate) : new Date(Date.now())}
+                                onDateSelect={(selectedDate: Date) => updateDirectSpecificEvent({ eventStartDate: formatDateToYYYYMMDD(selectedDate.toString()) })}
+                            />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -133,7 +197,10 @@ function SpecificEventForm() {
                             >
                                 End Date
                             </label>
-                            <GeneralDatePicker />
+                            <GeneralDatePicker
+                                date={eventEndDate ? new Date(eventEndDate) : new Date(Date.now())}
+                                onDateSelect={(selectedDate: Date) => updateDirectSpecificEvent({ eventEndDate: formatDateToYYYYMMDD(selectedDate.toString()) })}
+                            />
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -143,12 +210,16 @@ function SpecificEventForm() {
                             >
                                 Time
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={eventTime} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`} />
+                            <Input id="title" type="text" placeholder="Title"
+                                value={eventTime} disabled={isNotEditMode()}
+                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                onChange={(e) => { updateDirectSpecificEvent({ eventTime: e.target.value }) }}
+                            />
                         </div>
 
-                    </div>
 
-                    <div className='grid grid-cols-3 gap-6'>
+
+
                         <div className="flex flex-col space-y-1">
                             <label
                                 htmlFor="title"
@@ -183,6 +254,7 @@ function SpecificEventForm() {
                                 Event Type
                             </label>
                             <Select value={`${eventType}`}
+
                                 disabled={isNotEditMode()}
                                 onValueChange={(value) => updateDirectSpecificEvent({ eventType: value as EventTypeEnum })}>
 
@@ -190,18 +262,15 @@ function SpecificEventForm() {
                                     <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select a category" />
                                 </SelectTrigger>
 
-                                <SelectContent >
+                                <SelectContent>
                                     {eventTypeDropDownData.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.value}`}>{type?.text}</SelectItem>
                                     })}
-
                                 </SelectContent>
                             </Select>
                         </div>
 
-                    </div>
 
-                    <div className='grid grid-cols-3 gap-6'>
                         <div className="flex flex-col space-y-1">
                             <label
                                 htmlFor="title"
@@ -233,15 +302,41 @@ function SpecificEventForm() {
                             >
                                 Game Name
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={gameName?.name} disabled={isNotEditMode()}
-                                className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('gameName', { name: e.target.value, gameNameApprovalStatus: 'approved' }) }} />
+
+                            <Select value={`${gameName?.id}`}
+
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateNestedSpecificEvent('gameName', { id: parseInt(value), gameNameApprovalStatus: 'approved' })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {allGameNames.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                    })}
+                                    {
+                                        <div className="flex flex-row items-center relative space-x-2">
+
+                                            <Input id="name" type="text" placeholder="Game"
+                                                value={localGameName}
+                                                disabled={isNotEditMode()}
+                                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                onChange={(e) => { setLocalGameName(e.target.value) }} />
+
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('gameNames', { id: -allGameNames.length, name: localGameName })} />
+                                        </div>
+                                    }
+
+                                </SelectContent>
+                            </Select>
 
                         </div>
 
-                    </div>
 
-                    <div className='grid grid-cols-3 gap-6'>
+
+
                         <div className="flex flex-col space-y-1">
                             <label
                                 htmlFor="title"
@@ -249,8 +344,35 @@ function SpecificEventForm() {
                             >
                                 Team
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={team?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('team', { name: e.target.value, teamApprovalStatus: 'approved' }) }} />
+
+                            <Select value={`${team?.id}`}
+
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateNestedSpecificEvent('team', { id: parseInt(value), teamApprovalStatus: 'approved' })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {allTeamNames.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                    })}
+                                    {
+                                        <div className="flex flex-row items-center relative space-x-2">
+
+                                            <Input id="name" type="text" placeholder="Event"
+                                                value={localTeam}
+                                                disabled={isNotEditMode()}
+                                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                onChange={(e) => { setLocalTeam(e.target.value) }} />
+
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('teamNames', { id: -allLocations.length, name: localTeam })} />
+                                        </div>
+                                    }
+
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="flex flex-col space-y-1">
@@ -260,9 +382,37 @@ function SpecificEventForm() {
                             >
                                 2nd Team
                             </label>
-                            <Input id="title" type="text" placeholder="Title" value={secondTeam?.name} disabled={isNotEditMode()} className={`${isNotEditMode() ? 'border-0' : ''}`}
-                                onChange={(e) => { updateNestedSpecificEvent('secondTeam', { name: e.target.value, secondTeamApprovalStatus: 'approved' }) }} />
+                            <Select value={`${team?.id}`}
+
+                                disabled={isNotEditMode()}
+                                onValueChange={(value) => updateNestedSpecificEvent('secondTeam', { id: parseInt(value), secondTeamApprovalStatus: 'approved' })}>
+
+                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {allTeamNames.map((type, idx) => {
+                                        return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                    })}
+                                    {
+                                        <div className="flex flex-row items-center relative space-x-2">
+
+                                            <Input id="name" type="text" placeholder="Event"
+                                                value={secondLocalTeam}
+                                                disabled={isNotEditMode()}
+                                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                onChange={(e) => { setSecondLocalTeam(e.target.value) }} />
+
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('teamNames', { id: -allLocations.length, name: secondLocalTeam })} />
+                                        </div>
+                                    }
+
+                                </SelectContent>
+                            </Select>
+
                         </div>
+
                     </div>
 
                 </div>

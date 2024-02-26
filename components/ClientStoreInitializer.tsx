@@ -147,8 +147,8 @@ export type SpecificEventProps = {
     id: number,
     eventType: EventTypeEnum | null,
     gameType: GameTypeEnum | null,
-    eventStartDate: Date | null,
-    eventEndDate: Date | null,
+    eventStartDate: string | null,
+    eventEndDate: string | null,
     eventTime: string,
     eventImageUrl: string,
     tickets: Ticket[],
@@ -181,25 +181,66 @@ type CategoryProps = {
     categoryIcon: string,
 }
 
-type Props = {
-    homePage?: HomePageProps,
-    category?: CategoryProps[],
-    specificEvent?: SpecificEventProps
+type ArtistNameProps = {
+    id: number,
+    name: string,
+    artistImageUrl: string,
+    artistApprovalStatus: ApprovedNotApproved
+
 }
 
-function ClientStoreInitializer({ category, homePage, specificEvent }: Props) {
+type EventNameProps = {
+    id: number,
+    name: string,
+    eventNameApprovalStatus: ApprovedNotApproved
+}
+
+type GameNameProps = {
+    id: number,
+    name: string,
+    gameNameApprovalStatus: ApprovedNotApproved
+}
+
+type TeamNameProps = {
+    id: number,
+    name: string,
+    teamImageUrl: string,
+    teamApprovalStatus: ApprovedNotApproved
+}
+
+type LocationsProps = {
+    id: number,
+    name: string,
+    locationImageUrl: string,
+    locationApprovalStatus: ApprovedNotApproved
+}
+
+
+
+type Props = {
+    homePage?: HomePageProps,
+    categories?: CategoryProps[],
+    specificEvent?: SpecificEventProps,
+    artists?: ArtistNameProps[],
+    eventNames?: EventNameProps[],
+    gameNames?: GameNameProps[],
+    teamNames?: TeamNameProps[],
+    locations?: LocationsProps[]
+}
+
+function ClientStoreInitializer({ categories, homePage, specificEvent, artists, eventNames, gameNames, teamNames, locations }: Props) {
 
     useEffect(() => {
         if (homePage) {
             useHomePageStore.setState(homePage);
         }
-        if (category) {
-            useCategoryStore.setState({ categories: category });
+        if (categories) {
+            useCategoryStore.setState({ categories, artists, eventNames, gameNames, teamNames, locations });
         }
         if (specificEvent) {
             useSpecificEventStore.setState(specificEvent);
         }
-    }, [category, homePage, specificEvent]);
+    }, [categories, homePage, specificEvent]);
 
     return null;
 }

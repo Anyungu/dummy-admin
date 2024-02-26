@@ -4,7 +4,7 @@ import * as React from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 
-import { cn } from "@/lib/utils"
+import { cn, formatDateToYYYYMMDD } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -14,11 +14,17 @@ import {
 } from "@/components/ui/popover"
 import { useSpecificEventStore } from "@/store/specific-event.store"
 
-function GeneralDatePicker() {
-    const [date, setDate] = React.useState<Date>()
+type Props = {
+    onDateSelect: Function
+    date: Date
+}
+
+function GeneralDatePicker({ onDateSelect, date }: Props) {
     const {
         isNotEditMode,
     } = useSpecificEventStore();
+
+    console.log(date)
 
     return (
         <Popover>
@@ -38,8 +44,8 @@ function GeneralDatePicker() {
             <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                     mode="single"
-                    selected={date}
-                    onSelect={setDate}
+                    selected={date ?? Date.now()}
+                    onSelect={(e) => onDateSelect(e)}
                     initialFocus
                     disabled={isNotEditMode()}
                 />

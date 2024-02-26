@@ -107,8 +107,8 @@ type DirectSpecificEvent = {
     popularEvent: CheckedState,
     eventType: EventTypeEnum | null,
     gameType: GameTypeEnum | null,
-    eventStartDate: Date | null,
-    eventEndDate: Date | null,
+    eventStartDate: string | null,
+    eventEndDate: string | null,
     eventTime: string,
     eventImageUrl: string,
 }
@@ -141,8 +141,8 @@ export type SpecificEventStore = {
     id: number,
     eventType: EventTypeEnum | null,
     gameType: GameTypeEnum | null,
-    eventStartDate: Date | null,
-    eventEndDate: Date | null,
+    eventStartDate: string | null,
+    eventEndDate: string | null,
     eventTime: string,
     eventImageUrl: string,
     tickets: Ticket[],
@@ -216,19 +216,19 @@ export const useSpecificEventStore = create<SpecificEventStore>((set, get) => ({
     getEventStatusEnum: () => {
         return Object.entries(EventStatusEnum).map(([key, value]) => ({
             text: value,
-            value: key,
+            value: value,
         }));
     },
     getEventTypeEnum: () => {
         return Object.entries(EventTypeEnum).map(([key, value]) => ({
             text: value,
-            value: key,
+            value: value,
         }));
     },
     getGameTypeEnum: () => {
         return Object.entries(GameTypeEnum).map(([key, value]) => ({
             text: value,
-            value: key,
+            value: value,
         }));
     },
 
