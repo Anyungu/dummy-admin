@@ -31,6 +31,9 @@ jobs:
       - name: Run build
         run: npm run build
 
+      - name: List build artifacts
+        run: ls -alR
+
       # generate deploy package in a zip file
       - name: Generate deployment package
         run: zip -r deploy.zip * -x "node_modules/*"
