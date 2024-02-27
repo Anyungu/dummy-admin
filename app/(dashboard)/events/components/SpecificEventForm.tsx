@@ -95,7 +95,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {allEventNames.map((type, idx) => {
+                                    {allEventNames?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
                                     })}
                                     {
@@ -133,7 +133,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {allLocations.map((type, idx) => {
+                                    {allLocations?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
                                     })}
                                     {
@@ -169,7 +169,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent >
-                                    {allCategories.map((category, idx) => {
+                                    {allCategories?.map((category, idx) => {
                                         return <SelectItem key={idx} value={`${category?.id}`}>{category?.name}</SelectItem>
                                     })}
 
@@ -263,7 +263,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {eventTypeDropDownData.map((type, idx) => {
+                                    {eventTypeDropDownData?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.value}`}>{type?.text}</SelectItem>
                                     })}
                                 </SelectContent>
@@ -287,7 +287,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent >
-                                    {gameTypeDropDownData.map((type, idx) => {
+                                    {gameTypeDropDownData?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.value}`}>{type?.text}</SelectItem>
                                     })}
 
@@ -313,7 +313,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {allGameNames.map((type, idx) => {
+                                    {allGameNames?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
                                     })}
                                     {
@@ -355,7 +355,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {allTeamNames.map((type, idx) => {
+                                    {allTeamNames?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
                                     })}
                                     {
@@ -392,7 +392,7 @@ function SpecificEventForm() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {allTeamNames.map((type, idx) => {
+                                    {allTeamNames?.map((type, idx) => {
                                         return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
                                     })}
                                     {
