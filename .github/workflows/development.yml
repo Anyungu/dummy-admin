@@ -1,0 +1,73 @@
+name: Drop Backend development CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  buildAndTest:
+    name: CI Pipeline
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18.x']
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Initialize Node.js
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Install project dependencies, test and build
+      - name: Install dependencies
+        run: npm install
+      - name: Run build
+        run: npm run build
+
+      # generate deploy package in a zip file
+      - name: Generate deployment package
+        run: zip -r deploy.zip * -x "node_modules/*"
+
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Run string replace
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: '${{ steps.current-time.outputs.time }}'
+          replace-with: '-'
+          flags: 'g'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_SERVER_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_SERVER_KEY }}
+          aws-region: il-central-1
+
+
+      - name: Upload package to S3 bucket
+        run: aws s3 cp deploy.zip s3://admin-safsar-ebs-artifacts/
+
+      
+      - name: Create new ElasticBeanstalk Application Version
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name admin-safsarx \
+          --source-bundle S3Bucket="admin-safsar-ebs-artifacts",S3Key="deploy.zip" \
+          --version-label "admin-safsarx-development-${{ steps.format-time.outputs.replaced }}" \
+          --description "commit-sha-${{ github.sha }}" 
+
+      - name: Deploy new ElasticBeanstalk Application Version
+        run: aws elasticbeanstalk update-environment --environment-name admin-safsarx-env --version-label "admin-safsarx-development-${{ steps.format-time.outputs.replaced }}"
+
+
+      - name: Deployed!
+        run: echo App deployed to ELB
