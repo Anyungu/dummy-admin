@@ -31,12 +31,12 @@ jobs:
       - name: Run build
         run: npm run build
 
-      - name: List build artifacts
-        run: ls -alR
+      - name: List .next directory contents
+        run: ls -al .next
 
       # generate deploy package in a zip file
       - name: Generate deployment package
-        run: zip -r deploy.zip * -x "node_modules/*"
+        run: zip -r deploy.zip . -x "node_modules/*" "*.git*" "*__tests__*"
 
       - name: Get timestamp
         uses: gerred/actions/current-time@master
