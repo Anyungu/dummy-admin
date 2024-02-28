@@ -60,7 +60,6 @@ export const useCategoryStore = create<CategoryStore>((set) => ({
     teamNames: [],
     locations: [],
     addSingleValueToDropDown: (key: keyof Omit<CategoryStore, 'addSingleValueToDropDown'>, data: Partial<ArtistNameData | EventNameData | GameNameData | TeamNameData>) => set((state) => {
-
         const updatedArray = [...state[key], data]
 
         return { ...state, [key]: updatedArray };

@@ -197,10 +197,17 @@ export const useSpecificEventStore = create<SpecificEventStore>((set, get) => ({
 
     updateArraySpecificEvent: (index: number, primaryKey: keyof ArraySpecificEventKey, eventUpdates: Partial<ArraySpecificEvent>) => set((state) => {
 
-        if (index < 0 || index >= state[primaryKey]?.length) {
+
+        if (index < 0 || index > state[primaryKey]?.length) {
             console.warn('Index out of bounds');
             return state; // Return the current state if out of bounds
         }
+
+        if (index == 0) {
+            return { ...state, [primaryKey]: [eventUpdates] };
+
+        }
+
         const updatedEvent = state[primaryKey].map((item, i) =>
             i === index ? { ...item, ...eventUpdates } : item
         );

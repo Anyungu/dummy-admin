@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import GeneralDatePicker from '../../components/GeneralDatePicker';
 import { CheckCircledIcon, CheckIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import { formatDateToYYYYMMDD } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 enum EventStatusEnum {
     ACTIVE = 'פָּעִיל',
@@ -70,6 +71,7 @@ function SpecificEventForm() {
     const [localGameName, setLocalGameName] = useState('');
     const [localTeam, setLocalTeam] = useState('');
     const [secondLocalTeam, setSecondLocalTeam] = useState('');
+    const [localArtisName, setLocalArtisName] = useState('');
 
 
 
@@ -253,6 +255,109 @@ function SpecificEventForm() {
                                 <div>{artists?.length}</div>
                                 <div className={`${isNotEditMode() ? 'hidden' : 'block'}`}><Pencil1Icon /></div>
                             </div>
+                        </div>
+
+                        <div className="flex flex-col space-y-1">
+                            <label
+                                htmlFor="title"
+                                className="text-xs text-gray-600 pl-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                                Artists
+                            </label>
+                            <Popover>
+                                <PopoverTrigger onClick={() => console.log(1)}>
+
+                                    <div className={`px-3 w-full text-sm py-2 items-center flex flex-row justify-between ${isNotEditMode() ? 'border-0 text-gray-400' : 'border border-1 rounded-md'}`}>
+                                        <div>{artists?.length}</div>
+
+                                        <div className={`${isNotEditMode() ? 'hidden' : 'block'}`}>
+
+                                            <Pencil1Icon />
+
+                                        </div>
+                                    </div>
+                                </PopoverTrigger>
+
+                                <PopoverContent className='flex flex-col space-y-1'>
+                                    {artists?.map((el, idx) => {
+                                        return (<div className="flex flex-col space-y-1">
+                                            <Select value={`${el?.id}`}
+
+                                                disabled={isNotEditMode()}
+
+                                                onValueChange={(value) => {
+                                                    const name = allArtists?.find(type => `${type.id}` === value)?.name;
+                                                    updateArraySpecificEvent(idx, 'artists', { id: parseInt(value), artistApprovalStatus: 'approved', name })
+                                                }}>
+
+
+                                                <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                                    <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                                </SelectTrigger>
+
+                                                <SelectContent>
+                                                    {allArtists?.map((type, idx) => {
+                                                        return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                                    })}
+                                                    {
+                                                        <div className="flex flex-row items-center relative space-x-2">
+
+                                                            <Input id="name" type="text" placeholder="Event"
+                                                                value={localLocationName}
+                                                                disabled={isNotEditMode()}
+                                                                className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                                onChange={(e) => { setLocalLocationName(e.target.value) }} />
+
+                                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('artists', { id: -allArtists.length, name: localArtisName })} />
+                                                        </div>
+                                                    }
+
+                                                </SelectContent>
+                                            </Select>
+                                        </div>)
+                                    })}
+                                    {artists.length === 0 &&
+                                        // <div className="flex flex-col space-y-1">
+
+                                        <Select value={`${artists[0]?.id}`}
+
+                                            disabled={isNotEditMode()}
+
+                                            onValueChange={(value) => {
+                                                const name = allArtists?.find(type => `${type.id}` === value)?.name;
+                                                updateArraySpecificEvent(0, 'artists', { id: parseInt(value), artistApprovalStatus: 'approved', name })
+                                            }}>
+
+
+                                            <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
+                                                <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
+                                            </SelectTrigger>
+
+                                            <SelectContent>
+                                                {allArtists?.map((type, idx) => {
+                                                    return <SelectItem key={idx} value={`${type?.id}`}>{type?.name}</SelectItem>
+                                                })}
+                                                {
+                                                    <div className="flex flex-row items-center relative space-x-2">
+
+                                                        <Input id="name" type="text" placeholder="Event"
+                                                            value={localLocationName}
+                                                            disabled={isNotEditMode()}
+                                                            className={`${isNotEditMode() ? 'border-0' : ''}`}
+                                                            onChange={(e) => { setLocalLocationName(e.target.value) }} />
+
+                                                        <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('artists', { id: -allArtists.length, name: localArtisName })} />
+                                                    </div>
+                                                }
+
+                                            </SelectContent>
+                                        </Select>
+                                        // </div>
+                                    }
+
+                                </PopoverContent>
+                            </Popover>
+
                         </div>
 
                         <div className="flex flex-col space-y-1">
