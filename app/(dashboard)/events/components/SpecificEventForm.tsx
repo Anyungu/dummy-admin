@@ -280,7 +280,7 @@ function SpecificEventForm() {
 
                                 <PopoverContent className='flex flex-col space-y-1'>
                                     {artists?.map((el, idx) => {
-                                        return (<div className="flex flex-col space-y-1">
+                                        return (<div key={idx} className="flex flex-col space-y-1">
                                             <Select value={`${el?.id}`}
 
                                                 disabled={isNotEditMode()}
