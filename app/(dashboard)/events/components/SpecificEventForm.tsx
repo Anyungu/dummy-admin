@@ -88,7 +88,11 @@ function SpecificEventForm() {
                             <Select value={`${eventName?.id}`}
 
                                 disabled={isNotEditMode()}
-                                onValueChange={(value) => updateNestedSpecificEvent('eventName', { id: parseInt(value), eventNameApprovalStatus: 'approved' })}>
+                                onValueChange={(value) => {
+                                    const name = allEventNames.find(type => `${type.id}` === value)?.name;
+                                    updateNestedSpecificEvent('eventName', { id: parseInt(value), eventNameApprovalStatus: 'approved', name })
+                                }
+                                }>
 
                                 <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
                                     <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
@@ -126,7 +130,12 @@ function SpecificEventForm() {
                             <Select value={`${location?.id}`}
 
                                 disabled={isNotEditMode()}
-                                onValueChange={(value) => updateNestedSpecificEvent('location', { id: parseInt(value), locationApprovalStatus: 'approved' })}>
+
+                                onValueChange={(value) => {
+                                    const name = allLocations?.find(type => `${type.id}` === value)?.name;
+                                    updateNestedSpecificEvent('location', { id: parseInt(value), locationApprovalStatus: 'approved', name })
+                                }}>
+
 
                                 <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
                                     <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
@@ -306,7 +315,12 @@ function SpecificEventForm() {
                             <Select value={`${gameName?.id}`}
 
                                 disabled={isNotEditMode()}
-                                onValueChange={(value) => updateNestedSpecificEvent('gameName', { id: parseInt(value), gameNameApprovalStatus: 'approved' })}>
+
+
+                                onValueChange={(value) => {
+                                    const name = allGameNames.find(type => `${type.id}` === value)?.name;
+                                    updateNestedSpecificEvent('gameName', { id: parseInt(value), gameNameApprovalStatus: 'approved', name })
+                                }}>
 
                                 <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
                                     <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
@@ -348,7 +362,11 @@ function SpecificEventForm() {
                             <Select value={`${team?.id}`}
 
                                 disabled={isNotEditMode()}
-                                onValueChange={(value) => updateNestedSpecificEvent('team', { id: parseInt(value), teamApprovalStatus: 'approved' })}>
+
+                                onValueChange={(value) => {
+                                    const name = allTeamNames.find(type => `${type.id}` === value)?.name;
+                                    updateNestedSpecificEvent('team', { id: parseInt(value), teamApprovalStatus: 'approved', name })
+                                }}>
 
                                 <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
                                     <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
@@ -367,7 +385,7 @@ function SpecificEventForm() {
                                                 className={`${isNotEditMode() ? 'border-0' : ''}`}
                                                 onChange={(e) => { setLocalTeam(e.target.value) }} />
 
-                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('teamNames', { id: -allLocations.length, name: localTeam })} />
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('teamNames', { id: -allTeamNames.length, name: localTeam })} />
                                         </div>
                                     }
 
@@ -382,10 +400,15 @@ function SpecificEventForm() {
                             >
                                 2nd Team
                             </label>
-                            <Select value={`${team?.id}`}
+                            <Select value={`${secondTeam?.id}`}
 
                                 disabled={isNotEditMode()}
-                                onValueChange={(value) => updateNestedSpecificEvent('secondTeam', { id: parseInt(value), secondTeamApprovalStatus: 'approved' })}>
+                                // onValueChange={(value) => updateNestedSpecificEvent('secondTeam', { id: parseInt(value), secondTeamApprovalStatus: 'approved' })}>
+
+                                onValueChange={(value) => {
+                                    const name = allTeamNames.find(type => `${type.id}` === value)?.name;
+                                    updateNestedSpecificEvent('secondTeam', { id: parseInt(value), secondTeamApprovalStatus: 'approved', name })
+                                }}>
 
                                 <SelectTrigger className={`${isNotEditMode() ? 'border-0' : ''}`}>
                                     <SelectValue className="bg-white w-full cursor-pointer" placeholder="Select name" />
@@ -404,7 +427,7 @@ function SpecificEventForm() {
                                                 className={`${isNotEditMode() ? 'border-0' : ''}`}
                                                 onChange={(e) => { setSecondLocalTeam(e.target.value) }} />
 
-                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('teamNames', { id: -allLocations.length, name: secondLocalTeam })} />
+                                            <CheckCircledIcon color='green' className='cursor-pointer' onClick={() => addSingleValueToDropDown('teamNames', { id: -allTeamNames.length, name: secondLocalTeam })} />
                                         </div>
                                     }
 

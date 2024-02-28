@@ -48,8 +48,6 @@ function SaveEventButton() {
         ...(specificEventStore?.eventName?.id === undefined || specificEventStore?.eventName?.id < 0 ? { eventNameName: specificEventStore?.eventName?.name } : {}),
     }
 
-    //TOD: check data
-
     return (
         <Button className='px-4 py-2 bg-green-500 space-x-2'
             onClick={() => {
